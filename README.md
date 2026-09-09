@@ -58,16 +58,35 @@ Les tables et données de démonstration sont créées automatiquement au premie
 ```bash
 git clone https://github.com/suner-dev/inventory-api.git
 cd inventory-api
-./mvnw clean install -DskipTests
 ```
 
 ## Lancement
 
+### Methode 1 — Docker (zero-config, recommandee)
+
+Une seule commande demarre PostgreSQL + l'API + insere automatiquement les donnees de demonstration (Flyway). Aucune configuration requise :
+
 ```bash
-./mvnw spring-boot:run
-# ou, si le port 8080 est occupé :
-SERVER_PORT=8081 ./mvnw spring-boot:run
+docker compose up --build
 ```
+
+Puis ouvrir **http://localhost:8080/swagger-ui/index.html**.
+
+> Le schema (V1) et les 10 produits de demo (V2) sont crees automatiquement au premier demarrage. Les donnees persistent dans le volume Docker `inventory-pgdata`.
+
+### Methode 2 — Local (si PostgreSQL est deja installe)
+
+```bash
+# 1. Creer la base et l'utilisateur (une seule fois)
+#    psql -U postgres -c "CREATE DATABASE inventorydb;"
+#    psql -U postgres -c "CREATE USER inventory WITH PASSWORD 'inventory';"
+#    psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE inventorydb TO inventory;"
+
+# 2. Lancer l'API (le schema + le seed sont automatiques via Flyway)
+./mvnw spring-boot:run
+```
+
+Si le port 8080 est occupe : `SERVER_PORT=8081 ./mvnw spring-boot:run`.
 
 ## Swagger
 

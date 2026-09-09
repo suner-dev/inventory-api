@@ -1,0 +1,39 @@
+# ============================================================
+# DEMARRAGE ZERO-CONFIG POUR L'EXAMINATEUR
+#   Commande unique : docker compose up --build
+#   Swagger        : http://localhost:8080/swagger-ui/index.html
+#
+# Flyway cree le schema (V1) et insere les donnees de demo (V2)
+# automatiquement au premier demarrage. Aucune action manuelle.
+# ============================================================
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: inventorydb
+      POSTGRES_USER: inventory
+      POSTGRES_PASSWORD: inventory
+    volumes:
+      - inventory-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U inventory -d inventorydb']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/inventorydb
+      DB_USERNAME: inventory
+      DB_PASSWORD: inventory
+      LOW_STOCK_THRESHOLD: '5'
+      SERVER_PORT: '8080'
+    ports:
+      - '8080:8080'
+
+volumes:
+  inventory-pgdata:
