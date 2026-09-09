@@ -74,7 +74,8 @@ public class ProductServiceImpl implements ProductService {
         product.setName(request.name().trim());
         product.setPrice(request.price());
         product.setStockQuantity(request.stockQuantity());
-        // updatedAt est renseigne par @PreUpdate ; createdAt et id sont preserves
+        // Force le flush immediatement pour que @PreUpdate soit declenche
+        // et que updatedAt soit renseigne avant de retourner la reponse
         Product updated = productRepository.saveAndFlush(product);
         log.info("Produit modifie : id={}, stock={}", updated.getId(), updated.getStockQuantity());
         return toResponse(updated);

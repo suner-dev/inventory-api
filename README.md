@@ -6,6 +6,13 @@
 
 API REST de gestion d'un inventaire de produits avec **suivi des stocks**. Elle permet de créer, lire, modifier et supprimer des produits, et d'**alerter automatiquement lorsque le stock devient faible** (< 5 unités).
 
+**Fonctionnalités :**
+- CRUD complet des produits (nom, prix en BigDecimal, quantite en stock)
+- Detection automatique du stock faible (< 5 unites)
+- Persistance PostgreSQL via Spring Data JPA
+- Documentation Swagger/OpenAPI interactive
+- Donnees de demonstration chargees automatiquement
+
 ## Technologies
 
 - Java 17
@@ -87,6 +94,21 @@ Puis ouvrir **http://localhost:8080/swagger-ui/index.html**.
 ```
 
 Si le port 8080 est occupe : `SERVER_PORT=8081 ./mvnw spring-boot:run`.
+
+### Methode 3 — Script de demarrage rapide
+
+```bash
+# Compiler et demarrer
+./start.sh
+```
+
+### Reinitialisation de la base de donnees
+
+Si vous voulez recommencer avec des donnees fraiches :
+
+```bash
+./reset-db.sh
+```
 
 ## Swagger
 
